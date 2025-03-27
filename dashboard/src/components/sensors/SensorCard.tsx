@@ -37,7 +37,7 @@ const SensorCard: React.FC<SensorCardProps> = ({
         </div>
       </div>
 
-      <div className="mb-3">
+      <div className="mb-3 w-64 h-24 flex justify-center items-center">
         {children}
       </div>
 
