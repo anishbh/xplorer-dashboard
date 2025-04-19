@@ -99,7 +99,7 @@ const gridOptions = {
 type ActionType = 'accelerometer' | 'color' | 'gyroscope' | 'led' | 'motor' | 'servo' | 'temperature' | 'rangefinder';
 
 const SensorDashboard: React.FC = () => {
-  const { isConnected, error, startDataStreaming, stopDataStreaming, } = useSensorData();
+  const { isConnected, startDataStreaming, stopDataStreaming, } = useSensorData();
 
 
   // Stop all sensors at once
