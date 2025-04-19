@@ -1,6 +1,6 @@
 export interface SensorData {
   sensorType: string;
-  value: any;
+  value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   timestamp: string;
 }
 
@@ -65,7 +65,7 @@ export const parseSensorData = (data: { value: string }): SensorData | null => {
       return isNaN(num) ? v : num;
     });
 
-    let parsedValue: any;
+    let parsedValue: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     // Parse based on sensor type
     switch (sensorType) {

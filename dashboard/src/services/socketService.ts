@@ -1,11 +1,11 @@
 import { io, Socket } from 'socket.io-client';
-import { SensorData, parseSensorData } from '../utils/sensorParsers';
+import { parseSensorData } from '../utils/sensorParsers';
 
 class SocketService {
   private socket: Socket | null = null;
   private url: string;
   private connected: boolean = false;
-  private eventHandlers: Map<string, Set<(data: any) => void>> = new Map();
+  private eventHandlers: Map<string, Set<(data: any) => void>> = new Map(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   constructor(url: string = 'http://localhost:5001') {
     this.url = url;
@@ -56,7 +56,7 @@ class SocketService {
     });
   }
 
-  private notifyEventHandlers(event: string, data: any): void {
+  private notifyEventHandlers(event: string, data: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
       handlers.forEach(handler => {
@@ -70,7 +70,7 @@ class SocketService {
   }
 
   // Subscribe to an event
-  on(event: string, callback: (data: any) => void): () => void {
+  on(event: string, callback: (data: any) => void): () => void { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (!this.eventHandlers.has(event)) {
       this.eventHandlers.set(event, new Set());
     }
@@ -90,6 +90,25 @@ class SocketService {
   requestSensorData(sensors: string[]): void {
     if (this.socket && this.connected) {
       this.socket.emit('send_data', { data: sensors });
+    } else {
+      console.warn('Cannot request data: socket not connected');
+    }
+  }
+
+
+  // Get random data from sensors
+  getRandomSensorData(): void {
+    if (this.socket && this.connected) {
+      this.socket.emit('start_data');
+    } else {
+      console.warn('Cannot request data: socket not connected');
+    }
+  }
+
+  // Get random data from sensors
+  stopData(): void {
+    if (this.socket && this.connected) {
+      this.socket.emit('stop_data');
     } else {
       console.warn('Cannot request data: socket not connected');
     }

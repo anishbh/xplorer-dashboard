@@ -79,6 +79,24 @@ const useSensorData = (options: UseSensorDataOptions = {}) => {
     }
   };
 
+  // Requesting random sensor data
+  const startDataStreaming = () => {
+    if (isConnected) {
+      socketService.getRandomSensorData();
+    } else {
+      setError('Cannot request sensor data: not connected');
+    }
+  };
+
+  // stopping data streaming
+  const stopDataStreaming = () => {
+    if (isConnected) {
+      socketService.stopData();
+    } else {
+      setError('Cannot request sensor data: not connected');
+    }
+  };
+
   // Stop a specific sensor
   const stopSensor = (sensor: string) => {
     setActiveSensors(prev => {
@@ -98,9 +116,11 @@ const useSensorData = (options: UseSensorDataOptions = {}) => {
     sensorData,
     getSensorData,
     isConnected,
+    stopDataStreaming,
     error,
     requestSensors,
     stopSensor,
+    startDataStreaming,
     activeSensors: Array.from(activeSensors)
   };
 };
