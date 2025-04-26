@@ -5,9 +5,8 @@ import SensorCard from './SensorCard';
 import { ColorSensorData } from '../../utils/sensorParsers';
 
 const ColorSensor: React.FC = () => {
-  const { getSensorData, requestSensors, stopSensor, activeSensors, isConnected, sensorData } = useSensorData();
+  const { getSensorData, requestSensors, stopSensor, isConnected, sensorData } = useSensorData();
   const sensorName = 'color_sensor';
-  const isActive = activeSensors.includes(sensorName);
   const colorData = getSensorData<ColorSensorData>(sensorName);
   const lastUpdated = sensorData.get(sensorName)?.timestamp;
 
@@ -19,17 +18,22 @@ const ColorSensor: React.FC = () => {
     stopSensor(sensorName);
   };
 
+  const sensorCardProps = {
+    title: "Color Sensor",
+    icon: <MdColorLens size={20} />,
+    onStart: handleStart,
+    onStop: handleStop,
+    isConnected: isConnected,
+    lastUpdated: lastUpdated
+  };
+
   return (
-    <SensorCard
-      title="Color Sensor"
-      icon={<MdColorLens size={20} />}
-      isActive={isActive}
-      onStart={handleStart}
-      onStop={handleStop}
-      isConnected={isConnected}
-      lastUpdated={lastUpdated}
-    >
-      {colorData && isActive ? (
+    <SensorCard {...sensorCardProps}>
+      {!colorData ? (
+        <div className="flex items-center justify-center w-full">
+          <div className="text-gray-500">No Data Available</div>
+        </div>
+      ) : (
         <div className="flex flex-col items-center">
           <div
             className="w-16 h-16 rounded-full mb-2"
@@ -38,22 +42,14 @@ const ColorSensor: React.FC = () => {
             }}
           ></div>
           <div className="grid grid-cols-3 gap-2 w-full text-center">
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500">R</span>
-              <span className="font-mono">{colorData.r}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500">G</span>
-              <span className="font-mono">{colorData.g}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500">B</span>
-              <span className="font-mono">{colorData.b}</span>
-            </div>
+            {['r', 'g', 'b'].map((color) => (
+              <div key={color} className="flex flex-col">
+                <span className="text-xs text-gray-500">{color.toUpperCase()}</span>
+                <span className="font-mono">{colorData[color]}</span>
+              </div>
+            ))}
           </div>
         </div>
-      ) : (
-        <div className="text-center text-gray-500 py-4">No data available</div>
       )}
     </SensorCard>
   );

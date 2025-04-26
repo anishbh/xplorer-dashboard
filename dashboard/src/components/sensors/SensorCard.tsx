@@ -3,7 +3,6 @@ import React, { ReactNode, useEffect, useRef } from 'react';
 interface SensorCardProps {
   title: string;
   icon: ReactNode;
-  isActive: boolean;
   onStart: () => void;
   onStop: () => void;
   isConnected: boolean;
@@ -14,22 +13,18 @@ interface SensorCardProps {
 const SensorCard: React.FC<SensorCardProps> = ({
   title,
   icon,
-  isActive,
-  onStart,
-  onStop,
-  isConnected,
   children,
   lastUpdated
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   const adjustStyles = () => {
     const card = cardRef.current;
     if (!card) return;
-    
+
     const width = card.clientWidth;
     const height = card.clientHeight;
-    
+
     // Adjust font sizes based on container size
     if (width < 200) {
       card.classList.add('sensor-card-xs');
@@ -44,39 +39,39 @@ const SensorCard: React.FC<SensorCardProps> = ({
       card.classList.add('sensor-card-lg');
       card.classList.remove('sensor-card-xs', 'sensor-card-sm', 'sensor-card-md');
     }
-    
+
     // Adjust content area height based on card height
     const contentArea = card.querySelector('.sensor-content-area') as HTMLElement;
     if (contentArea) {
       const headerHeight = card.querySelector('.sensor-header')?.clientHeight || 0;
       const footerHeight = card.querySelector('.sensor-footer')?.clientHeight || 0;
       const availableHeight = height - headerHeight - footerHeight - 16; // Subtract padding
-      
+
       contentArea.style.height = `${Math.max(50, availableHeight)}px`;
     }
   };
-  
+
   // Set up resize observer to detect changes in the card's size
   useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
-  
+
     adjustStyles();
 
     const resizeObserver = new ResizeObserver(() => {
       adjustStyles();
     });
-    
+
     resizeObserver.observe(card);
-    
+
     // Listen for GridStack resize events
     const handleGridStackResize = () => {
       setTimeout(adjustStyles, 0);
     };
-    
+
     document.addEventListener('gridstack.resize', handleGridStackResize);
     document.addEventListener('gridstack.resizestop', handleGridStackResize);
-    
+
     // Cleanup
     return () => {
       resizeObserver.disconnect();
@@ -84,7 +79,7 @@ const SensorCard: React.FC<SensorCardProps> = ({
       document.removeEventListener('gridstack.resizestop', handleGridStackResize);
     };
   }, []);
-  
+
   return (
     <div ref={cardRef} className="sensor-card rounded-xl bg-white shadow w-full h-full flex flex-col">
       <div className="sensor-header flex justify-between items-center p-3">
@@ -94,11 +89,6 @@ const SensorCard: React.FC<SensorCardProps> = ({
           </div>
           <h3 className="font-semibold text-gray-800">{title}</h3>
         </div>
-
-        <div className="flex items-center gap-1">
-          <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-          <span className="text-xs text-gray-500">{isActive ? 'Active' : 'Inactive'}</span>
-        </div>
       </div>
 
       <div className="sensor-content-area flex-grow flex justify-center items-center p-2 overflow-hidden">
@@ -107,29 +97,11 @@ const SensorCard: React.FC<SensorCardProps> = ({
 
       <div className="sensor-footer flex justify-between items-center p-3">
         <div className="text-xs text-gray-400">
-          {lastUpdated && isActive && (
+          {lastUpdated && (
             <span>Updated: {new Date(lastUpdated).toLocaleTimeString()}</span>
           )}
         </div>
 
-        <div>
-          {isActive ? (
-            <button
-              onClick={onStop}
-              className="sensor-button-secondary cursor-pointer bg-black hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
-            >
-              Stop
-            </button>
-          ) : (
-            <button
-              onClick={onStart}
-              disabled={!isConnected}
-              className="sensor-button-primary cursor-pointer bg-black hover:bg-blue-700 text-white font-bold py-1 px-3 rounded"
-            >
-              Start
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );

@@ -1,3 +1,6 @@
 venv
 node_modules
 .DS_Store
+/simulator/__pycache__
+/simulator/__pycache__
+*.pyc

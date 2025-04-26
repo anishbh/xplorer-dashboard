@@ -5,9 +5,8 @@ import SensorCard from './SensorCard';
 import { ServoData } from '../../utils/sensorParsers';
 
 const Servo: React.FC = () => {
-  const { getSensorData, requestSensors, stopSensor, activeSensors, isConnected, sensorData } = useSensorData();
+  const { getSensorData, requestSensors, stopSensor, isConnected, sensorData } = useSensorData();
   const sensorName = 'servo';
-  const isActive = activeSensors.includes(sensorName);
   const servoData = getSensorData<ServoData>(sensorName);
   const lastUpdated = sensorData.get(sensorName)?.timestamp;
 
@@ -26,17 +25,22 @@ const Servo: React.FC = () => {
   const x = 50 + 40 * Math.cos(radians);
   const y = 50 - 40 * Math.sin(radians);
 
+  const sensorCardProps = {
+    title: "Servo",
+    icon: <GiPositionMarker size={20} />,
+    onStart: handleStart,
+    onStop: handleStop,
+    isConnected: isConnected,
+    lastUpdated: lastUpdated
+  };
+
   return (
-    <SensorCard
-      title="Servo"
-      icon={<GiPositionMarker size={20} />}
-      isActive={isActive}
-      onStart={handleStart}
-      onStop={handleStop}
-      isConnected={isConnected}
-      lastUpdated={lastUpdated}
-    >
-      {servoData && isActive ? (
+    <SensorCard {...sensorCardProps}>
+      {!servoData ? (
+        <div className="flex items-center justify-center w-full">
+          <div className="text-gray-500">No Data Available</div>
+        </div>
+      ) : (
         <div className="flex flex-col items-center">
           <svg width="100" height="60" viewBox="0 0 100 60" className="mb-2">
             {/* Semicircle background */}
@@ -65,8 +69,6 @@ const Servo: React.FC = () => {
             {servoData.angle.toFixed(1)}°
           </div>
         </div>
-      ) : (
-        <div className="text-center text-gray-500 py-4">No data available</div>
       )}
     </SensorCard>
   );

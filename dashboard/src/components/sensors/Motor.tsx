@@ -5,9 +5,8 @@ import SensorCard from './SensorCard';
 import { MotorData } from '../../utils/sensorParsers';
 
 const Motor: React.FC = () => {
-  const { getSensorData, requestSensors, stopSensor, activeSensors, isConnected, sensorData } = useSensorData();
+  const { getSensorData, requestSensors, stopSensor, isConnected, sensorData } = useSensorData();
   const sensorName = 'motor';
-  const isActive = activeSensors.includes(sensorName);
   const motorData = getSensorData<MotorData>(sensorName);
   const lastUpdated = sensorData.get(sensorName)?.timestamp;
 
@@ -22,17 +21,22 @@ const Motor: React.FC = () => {
   // Calculate a percentage for the speed gauge
   const speedPercentage = motorData ? (motorData.speed / 100) * 100 : 0;
 
+  const sensorCardProps = {
+    title: "Motor",
+    icon: <GiElectric size={20} />,
+    onStart: handleStart,
+    onStop: handleStop,
+    isConnected: isConnected,
+    lastUpdated: lastUpdated
+  };
+
   return (
-    <SensorCard
-      title="Motor"
-      icon={<GiElectric size={20} />}
-      isActive={isActive}
-      onStart={handleStart}
-      onStop={handleStop}
-      isConnected={isConnected}
-      lastUpdated={lastUpdated}
-    >
-      {motorData && isActive ? (
+    <SensorCard {...sensorCardProps}>
+      {!motorData ? (
+        <div className="flex items-center justify-center w-full">
+          <div className="text-gray-500">No Data Available</div>
+        </div>
+      ) : (
         <div className="flex flex-col items-center">
           {/* Speed gauge visualization */}
           <div className="w-full h-4 bg-gray-200 rounded-full mb-2">
@@ -43,18 +47,16 @@ const Motor: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-2 w-full text-center">
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500">Speed</span>
-              <span className="font-mono">{motorData.speed.toFixed(1)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500">Position</span>
-              <span className="font-mono">{motorData.position.toFixed(1)}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500">Count</span>
-              <span className="font-mono">{motorData.count}</span>
-            </div>
+            {[
+              { label: 'Speed', value: motorData.speed.toFixed(1) },
+              { label: 'Position', value: motorData.position.toFixed(1) },
+              { label: 'Count', value: motorData.count }
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col">
+                <span className="text-xs text-gray-500">{label}</span>
+                <span className="font-mono">{value}</span>
+              </div>
+            ))}
           </div>
 
           {/* Rotation animation */}
@@ -63,7 +65,7 @@ const Motor: React.FC = () => {
               className="w-full h-full"
               viewBox="0 0 24 24"
               style={{
-                animation: isActive ? `spin ${Math.max(0.1, 2 - motorData.speed / 50)}s linear infinite` : 'none'
+                animation: `spin ${Math.max(0.1, 2 - motorData.speed / 50)}s linear infinite`
               }}
             >
               <path
@@ -72,10 +74,7 @@ const Motor: React.FC = () => {
               />
             </svg>
           </div>
-
         </div>
-      ) : (
-        <div className="text-center text-gray-500 py-4">No data available</div>
       )}
     </SensorCard>
   );
