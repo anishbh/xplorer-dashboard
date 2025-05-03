@@ -10,6 +10,7 @@ import Motor from "./sensors/Motor";
 import Rangefinder from "./sensors/Rangefinder";
 import GridPersistence from "./GridPersistence";
 import AddWidgets from "./AddWidget";
+import { STORAGE_KEY, CELL_HEIGHT, BREAKPOINTS } from "../utils/constants";
 
 import {
   GridStackProvider,
@@ -31,14 +32,6 @@ const COMPONENT_MAP = {
   Rangefinder,
   Motor,
 };
-
-const CELL_HEIGHT = 50;
-const BREAKPOINTS = [
-  { c: 1, w: 700 },
-  { c: 3, w: 850 },
-  { c: 6, w: 950 },
-  { c: 8, w: 1100 },
-];
 
 const gridOptions: GridStackOptions = {
   acceptWidgets: true,
@@ -180,6 +173,15 @@ const SensorDashboard: React.FC = () => {
     stopDataStreaming();
   };
 
+
+  const getIntitialOptions = () => {
+    const layout = localStorage.getItem(STORAGE_KEY);
+    if (layout) {
+      return JSON.parse(layout);
+    }
+    return gridOptions;
+  };
+
   const handleStart = () => {
     if (!isStreaming) {
       startDataStreaming();
@@ -238,7 +240,7 @@ const SensorDashboard: React.FC = () => {
         </button>
       </div>
       <div ref={gridStackRef}>
-        <GridStackProvider initialOptions={gridOptions}>
+        <GridStackProvider initialOptions={getIntitialOptions()}>
           <AddWidgets />
           <GridPersistence />
           <div className="relative top-35 border-t-4 border-gray-300">
