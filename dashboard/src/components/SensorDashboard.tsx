@@ -10,9 +10,6 @@ import Motor from "./sensors/Motor";
 import Rangefinder from "./sensors/Rangefinder";
 import GridPersistence from "./GridPersistence";
 import AddWidgets from "./AddWidget";
-import { STORAGE_KEY, CELL_HEIGHT, BREAKPOINTS } from "../utils/constants";
-import { FaTrash } from 'react-icons/fa';
-
 
 import {
   GridStackProvider,
@@ -21,7 +18,8 @@ import {
 } from "../lib";
 import "gridstack/dist/gridstack.css";
 import "../assets/gridstack.css";
-import { GridStackOptions, GridStack } from "gridstack";
+import { GridStackOptions } from "gridstack";
+import { FaTrash } from "react-icons/fa";
 
 const COMPONENT_MAP = {
   ColorSensor,
@@ -34,10 +32,18 @@ const COMPONENT_MAP = {
   Motor,
 };
 
+const CELL_HEIGHT = 50;
+const BREAKPOINTS = [
+  { c: 1, w: 700 },
+  { c: 3, w: 850 },
+  { c: 6, w: 950 },
+  { c: 8, w: 1100 },
+];
+
 const gridOptions: GridStackOptions = {
   acceptWidgets: true,
   cellHeight: CELL_HEIGHT,
-  removable: "#trash",
+  removable: '#trash',
   columnOpts: {
     breakpointForWindow: true,
     breakpoints: BREAKPOINTS,
@@ -47,7 +53,7 @@ const gridOptions: GridStackOptions = {
   margin: 3,
   draggable: {
     // handle: '.grid-stack-item-content', // Drag handle
-    scroll: true, // Allow scrolling while dragging
+    scroll: true,                  // Allow scrolling while dragging
     // containment: 'parent'          // Constrains dragging to parent container
   },
   float: true,
@@ -161,20 +167,12 @@ const gridOptions: GridStackOptions = {
   ],
 };
 
-const getIntitialOptions = () => {
-  const layout = localStorage.getItem(STORAGE_KEY);
-  if (layout) {
-    return JSON.parse(layout);
-  }
-  return gridOptions;
-};
 
 const SensorDashboard: React.FC = () => {
-  const { isConnected, startDataStreaming, stopDataStreaming } =
-    useSensorData();
+  const { isConnected, startDataStreaming, stopDataStreaming } = useSensorData();
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const gridStackRef = useRef<HTMLDivElement>(null);
-  const gridInstanceRef = useRef<GridStack | null>(null);
+  const gridInstanceRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   // Stop all sensors at once
   const stopAllSensors = () => {
@@ -186,14 +184,7 @@ const SensorDashboard: React.FC = () => {
     if (!isStreaming) {
       startDataStreaming();
       setIsStreaming(true);
-      console.log("Start");
-    }
-  };
-
-  const resetLayout = () => {
-    if (gridInstanceRef.current) {
-      localStorage.removeItem(STORAGE_KEY);
-      window.location.reload();
+      console.log('Start');
     }
   };
 
@@ -203,12 +194,10 @@ const SensorDashboard: React.FC = () => {
       if (gridStackRef.current) {
         // In GridStack, once initialized, there's a gridstack property on the element
         // or you can use GridStack.getGridElement(gridStackRef.current)
-        const gridElement = gridStackRef.current.querySelector(".grid-stack");
-        if (gridElement && "gridstack" in gridElement) {
-          gridInstanceRef.current = (
-            gridElement as unknown as { gridstack: GridStack }
-          ).gridstack;
-          console.log("Grid initialized:", gridInstanceRef.current);
+        const gridElement = gridStackRef.current.querySelector('.grid-stack');
+        if (gridElement && (gridElement as any).gridstack) { // eslint-disable-line @typescript-eslint/no-explicit-any
+          gridInstanceRef.current = (gridElement as any).gridstack; // eslint-disable-line @typescript-eslint/no-explicit-any
+          console.log('Grid initialized:', gridInstanceRef.current);
         }
       }
     }, 500);
@@ -220,55 +209,52 @@ const SensorDashboard: React.FC = () => {
     <div className="mx-auto px-4 pb-10 bg-slate-100 min-h-screen">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pt-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Sensor Dashboard</h1>
+          <h1 className="text-4xl font-bold text-gray-900">Sensor Dashboard</h1>
         </div>
-        <div id="trash">
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded h-32 w-32 flex items-center justify-center"
-            aria-label="Delete"
-          >
-            <FaTrash size={72} />
-          </button>
-        </div>
+
         <div className="mt-4 sm:mt-0 flex items-center gap-4">
           <div className="flex items-center gap-2">
             <button
               onClick={handleStart}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{isStreaming ? 'Started' : 'Start'}</button>
+              className="bg-blue-500 hover:bg-blue-700 border-4 border-blue-700 text-white font-bold py-2 px-4 rounded">{isStreaming ? 'Started' : 'Start'}</button>
             <button
               onClick={stopAllSensors}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Stop All
-            </button>
-            <button
-              onClick={resetLayout}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Reset Layout
-            </button>
-            <div
-              className={`w-3 h-3 rounded-full ${
-                isConnected ? "bg-green-500" : "bg-red-500"
-              }`}
-            ></div>
+              className="bg-red-500 hover:bg-red-700 border-4 border-red-700 text-white font-bold py-2 px-4 rounded">Stop All</button>
+            <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
             <span className="text-sm">
-              {isConnected ? "Connected" : "Disconnected"}
+              {isConnected ? 'Connected' : 'Disconnected'}
             </span>
           </div>
+
         </div>
+
+      </div >
+      <div id="trash">
+        <button
+          className="bg-red-500 hover:bg-red-700 border-4 border-red-700 text-white font-bold py-2 px-2 right-4 rounded h-32 w-71 flex items-center justify-center absolute"
+          aria-label="Delete"
+        >
+          <FaTrash size={72} />
+        </button>
       </div>
       <div ref={gridStackRef}>
-        <GridStackProvider initialOptions={getIntitialOptions()}>
+        <GridStackProvider initialOptions={gridOptions}>
           <AddWidgets />
           <GridPersistence />
-          <GridStackRenderProvider>
-            <GridStackRender componentMap={COMPONENT_MAP} />
-          </GridStackRenderProvider>
+          <div className="relative top-35 border-t-4 border-gray-300">
+            <GridStackRenderProvider>
+              <GridStackRender componentMap={COMPONENT_MAP} />
+            </GridStackRenderProvider>
+          </div>
+
         </GridStackProvider>
-      </div>
-    </div>
+
+      </div >
+    </div >
   );
 };
+
+
+
 
 export default SensorDashboard;

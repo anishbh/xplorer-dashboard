@@ -9,7 +9,7 @@ import { BsRulers } from 'react-icons/bs';
 
 type ActionType = 'accelerometer' | 'color' | 'gyroscope' | 'led' | 'motor' | 'servo' | 'temperature' | 'rangefinder';
 
-const AddWidgets: React.FC = () =>  {
+const AddWidgets: React.FC = () => {
   const { addWidget } = useGridStackContext();
 
   const handleAction = (action: ActionType) => {
@@ -22,10 +22,12 @@ const AddWidgets: React.FC = () =>  {
       case 'accelerometer': {
         const node = () => ({
           id: `accelerometer-${Date.now()}`, // Add unique ID
-          h: 4,
+          h: 5,
           w: 4,
           x: 0,
           y: 2,
+          minW: 2,
+          minH: 5,
           content: JSON.stringify({
             name: "Accelerometer",
             props: {
@@ -46,6 +48,8 @@ const AddWidgets: React.FC = () =>  {
             w: 4,
             x: 0,
             y: 2,
+            minW: 1,
+            minH: 5,
             content: JSON.stringify({
               name: "ColorSensor",
               props: {
@@ -65,6 +69,8 @@ const AddWidgets: React.FC = () =>  {
             w: 4,
             x: 0,
             y: 2,
+            minW: 2,
+            minH: 5,
             content: JSON.stringify({
               name: "Gyroscope",
               props: {
@@ -80,10 +86,12 @@ const AddWidgets: React.FC = () =>  {
         {
           const node = () => ({
             id: `led-${Date.now()}`, // Add unique ID
-            h: 4,
+            h: 5,
             w: 4,
             x: 0,
             y: 2,
+            minW: 1,
+            minH: 4,
             content: JSON.stringify({
               name: "LED",
               props: {
@@ -99,10 +107,12 @@ const AddWidgets: React.FC = () =>  {
         {
           const node = () => ({
             id: `motor-${Date.now()}`, // Add unique ID
-            h: 4,
+            h: 5,
             w: 4,
             x: 0,
             y: 2,
+            minW: 2,
+            minH: 5,
             content: JSON.stringify({
               name: "Motor",
               props: {
@@ -118,10 +128,12 @@ const AddWidgets: React.FC = () =>  {
         {
           const node = () => ({
             id: `servo-${Date.now()}`, // Add unique ID
-            h: 4,
+            h: 6,
             w: 4,
             x: 0,
             y: 2,
+            minW: 2,
+            minH: 6,
             content: JSON.stringify({
               name: "Servo",
               props: {
@@ -137,10 +149,12 @@ const AddWidgets: React.FC = () =>  {
         {
           const node = () => ({
             id: `temperature-${Date.now()}`, // Add unique ID
-            h: 4,
+            h: 7,
             w: 4,
             x: 0,
             y: 2,
+            minW: 2,
+            minH: 7,
             content: JSON.stringify({
               name: "Temperature",
               props: {
@@ -156,10 +170,12 @@ const AddWidgets: React.FC = () =>  {
         {
           const node = () => ({
             id: `rangefinder-${Date.now()}`, // Add unique ID
-            h: 4,
+            h: 8,
             w: 4,
             x: 0,
             y: 2,
+            minW: 2,
+            minH: 8,
             content: JSON.stringify({
               name: "Rangefinder",
               props: {

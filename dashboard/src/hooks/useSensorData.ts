@@ -61,6 +61,7 @@ const useSensorData = (options: UseSensorDataOptions = {}) => {
       errorUnsubscribe();
       dataUpdateUnsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoConnect, activeSensors, handleDataUpdate]);
 
   // Request data from specific sensors

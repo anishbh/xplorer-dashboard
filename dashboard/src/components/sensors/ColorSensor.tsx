@@ -27,6 +27,7 @@ const ColorSensor: React.FC = () => {
     lastUpdated: lastUpdated
   };
 
+
   return (
     <SensorCard {...sensorCardProps}>
       {!colorData ? (
@@ -42,7 +43,7 @@ const ColorSensor: React.FC = () => {
             }}
           ></div>
           <div className="grid grid-cols-3 gap-2 w-full text-center">
-            {['r', 'g', 'b'].map((color) => (
+            {(['r', 'g', 'b'] as const).map((color) => (
               <div key={color} className="flex flex-col">
                 <span className="text-xs text-gray-500">{color.toUpperCase()}</span>
                 <span className="font-mono">{colorData[color]}</span>
