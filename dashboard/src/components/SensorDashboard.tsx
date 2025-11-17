@@ -8,6 +8,7 @@ import LED from "./sensors/LED";
 import Servo from "./sensors/Servo";
 import Motor from "./sensors/Motor";
 import Rangefinder from "./sensors/Rangefinder";
+import Camera from "./sensors/Camera";
 import GridPersistence from "./GridPersistence";
 import AddWidgets from "./AddWidget";
 import { STORAGE_KEY, CELL_HEIGHT, BREAKPOINTS } from "../utils/constants";
@@ -33,6 +34,7 @@ const COMPONENT_MAP = {
   Temperature,
   Rangefinder,
   Motor,
+  Camera
 };
 
 const gridOptions: GridStackOptions = {

@@ -7,7 +7,7 @@ import { GiElectric, GiPositionMarker } from 'react-icons/gi';
 import { BsRulers } from 'react-icons/bs';
 
 
-type ActionType = 'accelerometer' | 'color' | 'gyroscope' | 'led' | 'motor' | 'servo' | 'temperature' | 'rangefinder';
+type ActionType = 'accelerometer' | 'color' | 'gyroscope' | 'led' | 'motor' | 'servo' | 'temperature' | 'rangefinder' | 'camera';
 
 const AddWidgets: React.FC = () => {
   const { addWidget } = useGridStackContext();
@@ -185,6 +185,27 @@ const AddWidgets: React.FC = () => {
           });
           addWidget(node);
           console.log('Rangefinder action triggered');
+          break;
+        }
+      case 'camera': 
+        {
+          const node = () => ({
+            id: `camera-${Date.now()}`,
+            h: 8,
+            w: 6,
+            x: 0,
+            y: 2,
+            minW: 4,
+            minH: 6,
+            content: JSON.stringify({
+              name: "Camera",
+              props: {
+                isActive: true
+              },
+            }),
+          });
+          addWidget(node);
+          console.log('Camera action triggered');
           break;
         }
     }
