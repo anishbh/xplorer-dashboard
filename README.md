@@ -37,4 +37,14 @@ npm install
 npm run dev
 ```
 
-5. Camera feed should already be visible. Press "Start" to see other sensor feed. 
+5. Camera feed should already be visible. Press "Start" to see other sensor feed.
+   
+6. For thruster control, make sure the XRP serial port is correct in motor_bridge.py by running
+```
+ls /dev/tty.usbmodem*
+```
+
+7. Connect thruster controls in a separate terminal and run
+```
+python3 motor_bridge.py
+```
