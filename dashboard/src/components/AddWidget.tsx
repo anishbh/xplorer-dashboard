@@ -223,6 +223,7 @@ const AddWidgets: React.FC = () => {
         <DropdownItem icon={BsRulers} onClick={() => handleAction('rangefinder')}>Rangefinder</DropdownItem>
         <DropdownItem icon={GiPositionMarker} onClick={() => handleAction('servo')}>Servo</DropdownItem>
         <DropdownItem icon={FaTemperatureHigh} onClick={() => handleAction('temperature')}>Temperature</DropdownItem>
+        <DropdownItem icon={FaTemperatureHigh} onClick={() => handleAction('camera')}>Camera</DropdownItem>
       </Dropdown>
     </div >
   );

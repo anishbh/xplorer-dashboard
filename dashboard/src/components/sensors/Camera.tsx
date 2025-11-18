@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { MdVideocam } from 'react-icons/md';
 import { Dropdown, DropdownItem } from 'flowbite-react';
+import { PI_IP } from '../../utils/constants';
 
 import SensorCard from './SensorCard';
 import useSensorData from '../../hooks/useSensorData';
 
-const STREAM_URL = 'http://localhost:8889/cam/'; // mediamtx url
+const STREAM_URL = `http://${PI_IP}:5002/video_feed`; 
 
 type ViewMode = 'Live' | 'Info';
 

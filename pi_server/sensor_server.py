@@ -9,7 +9,6 @@ from flask_socketio import SocketIO, emit
 
 # pip install eventlet flask flask-cors flask-socketio
 
-
 def read_temperature_c() -> float:
     """Return a single float value for temperature in Celsius."""
     return 25.0 + random.uniform(-0.5, 0.5)
@@ -41,28 +40,26 @@ def _ensure_list(values: Union[float, int, List[Union[float, int]], tuple]) -> L
         return list(values)
     return [values]
 
+
 def make_payload(sensor_key: str) -> dict:
-    """
-    Build the payload that matches your parseSensorData expectations:
-      data.value === "\"<Label>\", \"v1, v2, ...\""
-    """
     cfg = SENSORS[sensor_key]
-    label: str = cfg["label"] 
-    reader: SensorReader = cfg["reader"] 
+    label: str = cfg["label"]
+    reader: SensorReader = cfg["reader"]
 
     raw_values = _ensure_list(reader())
     formatted_values = []
     for v in raw_values:
-        if isinstance(v, float):
-            formatted_values.append(f"{v:.2f}")
-        else:
-            formatted_values.append(str(v))
+      if isinstance(v, float):
+          formatted_values.append(f"{v:.2f}")
+      else:
+          formatted_values.append(str(v))
 
     values_str = ", ".join(formatted_values)
 
     return {
         "value": f"\"{label}\", \"{values_str}\""
     }
+
 
 def stream_sensors_forever(sensor_keys: List[str]):
     global streaming
@@ -77,22 +74,18 @@ def stream_sensors_forever(sensor_keys: List[str]):
     print("Background stream loop exited")
 
 
-
 @socketio.on("connect")
 def on_connect():
     print("Client connected")
+
 
 @socketio.on("disconnect")
 def on_disconnect():
     print("Client disconnected")
 
+
 @socketio.on("send_data")
 def on_send_data(payload):
-    """
-    React calls: socket.emit('send_data', { data: sensors })
-    sensors is an array of strings, e.g., ["temperature", "accelerometer"].
-    We emit ONE reading for each requested sensor.
-    """
     try:
         sensors = (payload or {}).get("data", [])
     except Exception:
@@ -109,12 +102,9 @@ def on_send_data(payload):
         else:
             print(f"Unknown sensor requested: {sensor_key}")
 
+
 @socketio.on("start_data")
 def on_start_data():
-    """
-    Start continuous streaming (1 Hz) of DEFAULT_STREAM_SENSORS,
-    until 'stop_data' arrives.
-    """
     global stream_thread, streaming
 
     if streaming:
@@ -129,6 +119,7 @@ def on_start_data():
         DEFAULT_STREAM_SENSORS.copy(),
     )
 
+
 @socketio.on("stop_data")
 def on_stop_data():
     global streaming
@@ -141,4 +132,5 @@ def on_stop_data():
 
 
 if __name__ == "__main__":
+    print("Sensor server on 0.0.0.0:5001")
     socketio.run(app, host="0.0.0.0", port=5001)

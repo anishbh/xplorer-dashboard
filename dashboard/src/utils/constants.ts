@@ -8,3 +8,5 @@ export const BREAKPOINTS = [
   { c: 6, w: 950 },
   { c: 8, w: 1100 },
 ];
+
+export const PI_IP = "192.168.2.2";

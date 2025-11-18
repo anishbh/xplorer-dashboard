@@ -1,5 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { parseSensorData } from '../utils/sensorParsers';
+import { PI_IP } from '../utils/constants';
 
 class SocketService {
   private socket: Socket | null = null;
@@ -7,7 +8,7 @@ class SocketService {
   private connected: boolean = false;
   private eventHandlers: Map<string, Set<(data: any) => void>> = new Map(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  constructor(url: string = 'http://localhost:5001') {
+  constructor(url: string = `http://${PI_IP}:5001`) {
     this.url = url;
     this.eventHandlers = new Map();
   }
