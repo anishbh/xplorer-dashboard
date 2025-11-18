@@ -16,8 +16,8 @@ git clone -b pi-server --single-branch https://github.com/anishbh/xplorer-dashbo
 4. Run the full server
 `python3 run_server.py`
 
-## Running the dashboard (locally on laptop)
-1. On your own laptop, Clone the repository (main branch)
+## Running the dashboard
+1. In a separate terminal, clone the repository (main branch)
 ```
 git clone https://github.com/anishbh/xplorer-dashboard.git
 ```
@@ -28,7 +28,7 @@ npm install
 ```
 3. Set the correct PI_IP of Raspberry Pi in `dashboard/src/utils/constants.ts`
 
-4. Run the server. Might have issues on chrome so use Safari / another browser
+4. Run the server and view on `http://localhost:3000`. Might have issues on Chrome so use Safari / another browser
 ```
 npm run dev
 ```
