@@ -25,7 +25,7 @@
 ```
 
 ## Running the dashboard
-1. In a separate terminal, clone the repository (main branch)
+1. In a separate terminal locally on your laptop (not in Pi ssh anymore), clone the repository (main branch)
 ```
 > git clone https://github.com/anishbh/xplorer-dashboard.git
 > cd xplorer_dashboard
